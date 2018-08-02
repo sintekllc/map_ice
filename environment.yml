@@ -13,4 +13,10 @@ dependencies:
   - bokeh
   - ipyleaflet
   - requests
+  - shapely
+  - fiona
+  - six
+  - pyproj
   - geopandas
+  - descartes
+  - pysal
