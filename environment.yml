@@ -13,7 +13,6 @@ dependencies:
   - bokeh
   - ipyleaflet
   - requests
-  - zipfile
   - re
   - os
   - itertools
