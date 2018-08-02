@@ -1,16 +1,12 @@
 name: map-environment
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - python
   - numpy
-  - psutil
-  - toolz
   - matplotlib
-  - dill
   - pandas
-  - partd
-  - bokeh
   - ipyleaflet
   - requests
   - shapely
@@ -18,5 +14,4 @@ dependencies:
   - six
   - pyproj
   - geopandas
-  - descartes
-  - pysal
+  
