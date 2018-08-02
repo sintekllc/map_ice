@@ -1,2 +1,2 @@
 # map_ice
-map of ice 
+Show map of ice in Arctic - Baren and Kar Sea
