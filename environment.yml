@@ -1,0 +1,21 @@
+name: map-environment
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - psutil
+  - toolz
+  - matplotlib
+  - dill
+  - pandas
+  - partd
+  - bokeh
+  - datetime
+  - ipyleaflet
+  - requests
+  - zipfile
+  - re
+  - os
+  - itertools
+  - geopandas
