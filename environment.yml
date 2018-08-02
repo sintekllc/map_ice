@@ -13,7 +13,5 @@ dependencies:
   - bokeh
   - ipyleaflet
   - requests
-  - re
-  - os
   - itertools
   - geopandas
