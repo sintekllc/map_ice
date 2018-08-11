@@ -7,11 +7,15 @@ dependencies:
   - matplotlib
   - pandas
   - ipyleaflet
+  - libgdal
   - requests
   - shapely
   - fiona
   - six
   - pyproj
+  - metpy
+  - xarray
   - geopandas
+  
   
   
