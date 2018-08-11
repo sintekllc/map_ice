@@ -115,8 +115,8 @@ def map_wind(ds,m,fdate='2018-07-24T06:00:00'):
     }
     import numpy as np
     import datetime
-    if (ds['time'][-1].values > np.datetime64(fdate))&
-    (ds['time'][0].values < np.datetime64(fdate)):
+    if ((ds['time'][-1].values > np.datetime64(fdate))&
+        (ds['time'][0].values < np.datetime64(fdate))):
         wind = Velocity(
             data=ds.sel(time=fdate), 
             #zonal_speed='u_wind', meridional_speed='v_wind', 
@@ -130,8 +130,8 @@ def map_wind(ds,m,fdate='2018-07-24T06:00:00'):
         print('Нет данных на данную дату')
 
 def get_png(ds,fdate='2018-07-04T12:00:00'):
-    if (ds['time'][-1].values > np.datetime64(fdate))&
-    (ds['time'][0].values < np.datetime64(fdate)):
+    if ((ds['time'][-1].values > np.datetime64(fdate))&
+        (ds['time'][0].values < np.datetime64(fdate))):
         lons=ds.sel(time=fdate)['lon']
         ind_lons=np.where((lons>18.)&(lons<100.))
 
