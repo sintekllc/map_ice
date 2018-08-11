@@ -1,8 +1,7 @@
 name: map-environment
 channels:
   - conda-forge
-  - nodefaults
-dependencies:
+  dependencies:
   - python
   - numpy
   - matplotlib
@@ -14,5 +13,5 @@ dependencies:
   - six
   - pyproj
   - geopandas
-  - xarray
+  
   
