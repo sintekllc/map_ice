@@ -14,4 +14,7 @@ dependencies:
   - six
   - pyproj
   - geopandas
+  - metpy
+  - xarray
+  - ftplib
   
