@@ -1,7 +1,7 @@
 name: map-environment
 channels:
   - conda-forge
-  dependencies:
+dependencies:
   - python
   - numpy
   - matplotlib
