@@ -7,6 +7,8 @@ import geopandas
 import datetime
 now = datetime.datetime.now()
 print(now.year, now.month, now.day, now.hour, now.minute, now.second)
+import xarray as xr
+import ftplib
 
 def is_downloadable(url):
     """
@@ -130,3 +132,30 @@ def download_year(year=2018,path_to=''):
         fn=get_letter(nextdate,'K',path_to=os.path.join(main_dir[0],common_dir[1]))
         nextdate = nextdate + delta
     return
+
+def down_w(fname):
+    if not os.path.exists(INPUT+fname):
+        #url = 'ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis/surface_gauss/tmax.2m.gauss.2018.nc'
+        url = 'ftp.cdc.noaa.gov'
+        
+        ftp = ftplib.FTP(url)
+        ftp.login()
+        ftp.cwd('/Datasets/ncep.reanalysis/surface_gauss/')
+        with open(INPUT+fname, 'wb') as f:
+            ftp.retrbinary('RETR ' + fname, f.write)
+
+def get_data_w(fname):
+    
+    down_w(fname)
+    ds3 = xr.open_dataset(INPUT+fname)
+    
+    return ds3
+
+def get_wind_data():
+    fname='uwnd.10m.gauss.2018.nc'
+    ds3=get_data_w(fname)
+    fname='vwnd.10m.gauss.2018.nc'
+    ds4=get_data_w(fname)
+    ds5=xr.merge([ds3,ds4])
+    return ds5
+    

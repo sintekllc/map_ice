@@ -78,13 +78,17 @@ def map_thick(df1,df2,cols):
     map_ice_thick(df2,m,cols)
     display(m)
     return m
-    
-def map_conc(df1,df2,cols):
+
+def init_map():
     lat = 73.
     lon = 45.748445
     center = [lat, lon]
     zoom = 4
     m = Map(default_tiles=TileLayer(opacity=1.0), center=center, zoom=zoom)
+    return m
+
+def map_conc(df1,df2,cols):
+    m = init_map()
     map_ice_conc(df1,m,cols)
     map_ice_conc(df2,m,cols)
     display(m)
@@ -102,3 +106,19 @@ def map_line(line,m):
                         
                        )
     m += pl
+
+def map_wind(ds,m,fdate='2018-07-24T06:00:00'):
+    display_options = {
+    'velocityType': 'Global Wind',
+    'displayPosition': 'bottomleft',
+    'displayEmptyString': 'No wind data'
+    }
+    wind = Velocity(
+        data=ds.sel(time=fdate), 
+        #zonal_speed='u_wind', meridional_speed='v_wind', 
+        zonal_speed='uwnd', meridional_speed='vwnd', 
+        latitude_dimension='lat', longitude_dimension='lon', 
+        velocity_scale=0.01, max_velocity=20, 
+        display_options=display_options
+    )
+    m.add_layer(wind)
