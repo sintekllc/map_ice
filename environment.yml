@@ -1,6 +1,7 @@
 name: map-environment
 channels:
   - conda-forge
+  - nodefaults
 dependencies:
   - python
   - numpy
