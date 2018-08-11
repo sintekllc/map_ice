@@ -152,9 +152,11 @@ def get_data_w(fname,INPUT=''):
     return ds3
 
 def get_wind_data():
-    fname='uwnd.10m.gauss.2018.nc'
+    fname='new_uwnd.nc'
+    #'uwnd.10m.gauss.2018.nc'
     ds3=get_data_w(fname)
-    fname='vwnd.10m.gauss.2018.nc'
+    fname='new_vwnd.nc'
+    #fname='vwnd.10m.gauss.2018.nc'
     ds4=get_data_w(fname)
     ds5=xr.merge([ds3,ds4])
     return ds5
