@@ -133,7 +133,7 @@ def download_year(year=2018,path_to=''):
         nextdate = nextdate + delta
     return
 
-def down_w(fname):
+def down_w(fname,INPUT=''):
     if not os.path.exists(INPUT+fname):
         #url = 'ftp://ftp.cdc.noaa.gov/Datasets/ncep.reanalysis/surface_gauss/tmax.2m.gauss.2018.nc'
         url = 'ftp.cdc.noaa.gov'
@@ -144,7 +144,7 @@ def down_w(fname):
         with open(INPUT+fname, 'wb') as f:
             ftp.retrbinary('RETR ' + fname, f.write)
 
-def get_data_w(fname):
+def get_data_w(fname,INPUT=''):
     
     down_w(fname)
     ds3 = xr.open_dataset(INPUT+fname)
@@ -158,4 +158,11 @@ def get_wind_data():
     ds4=get_data_w(fname)
     ds5=xr.merge([ds3,ds4])
     return ds5
+
+def get_temp_data():
+    fname='tmp.0-10cm.gauss.2018.nc'
+    ds3=get_data_w(fname)
+    return ds3
+
+
     

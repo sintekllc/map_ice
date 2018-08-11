@@ -122,3 +122,54 @@ def map_wind(ds,m,fdate='2018-07-24T06:00:00'):
         display_options=display_options
     )
     m.add_layer(wind)
+
+def get_png(ds,fdate='2018-07-04T12:00:00'):
+    lons=ds.sel(time=fdate)['lon']
+    ind_lons=np.where((lons>18.)&(lons<100.))
+
+    lats=ds.sel(time=fdate)['lat']
+    ind_lats=np.where(lats>65.)
+
+    lon_2d, lat_2d = np.meshgrid(lons[ind_lons], lats[ind_lats])
+    
+    surface_temp = ds.sel(time=dt)['tmp'][ind_lats[0],ind_lons[0]]
+    surface_temp.metpy.convert_units('degC')
+    acc_web=surface_temp
+    acc_norm = acc_web - np.nanmin(acc_web)
+    acc_norm = acc_norm / np.nanmax(acc_norm)
+    acc_norm = np.where(np.isfinite(acc_web), acc_norm, 0)
+    
+    import PIL
+    from base64 import b64encode
+    try:
+        from StringIO import StringIO
+        py3 = False
+    except ImportError:
+        from io import StringIO, BytesIO
+        py3 = True
+    
+    acc_im = PIL.Image.fromarray(np.uint8(plt.cm.Blues(acc_norm)*255))
+                                      #YlOrRd(acc_norm)*255))
+                                      #jet
+    acc_mask = np.where(np.isfinite(acc_web), 255, 0)
+    mask = PIL.Image.fromarray(np.uint8(acc_mask), mode='L')
+    im = PIL.Image.new('RGBA', acc_norm.shape[::-1], color=None)
+    im.paste(acc_im, mask=mask)
+    if py3:
+        f = BytesIO()
+    else:
+        f = StringIO()
+    im.save(f, 'png')
+    data = b64encode(f.getvalue())
+    if py3:
+        data = data.decode('ascii')
+    imgurl = 'data:image/png;base64,' + data
+    return imgurl 
+
+def map_temp(ds,m,fdate='2018-07-24T06:00:00'):
+    bounds = [(88., 18), (65., 100.)]
+    imgurl=get_png(ds,fdate)
+    #bounds = [(18., 68), (100., 85.)]
+    io = ImageOverlay(url=imgurl, bounds=bounds, opacity=0.3)
+    m.add_layer(io)
+    
