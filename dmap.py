@@ -1,13 +1,11 @@
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
-import matplotlib.pyplot as plt
 import geopandas
 from ipyleaflet import (
     Map,
     Marker,
     Velocity,
     basemaps,
-    ImageOverlay,
     TileLayer,Polygon,Polyline
 )
 import ipyleaflet as il
@@ -134,7 +132,7 @@ def map_wind(ds,m,fdate='2018-07-24T06:00:00'):
         print('Нет данных на данную дату')
 
 
-def get_png(acc_web):       
+def get_png(acc_web,colormap=plt.cm.Blues):       
     acc_norm = acc_web - np.nanmin(acc_web)
     acc_norm = acc_norm / np.nanmax(acc_norm)
     acc_norm = np.where(np.isfinite(acc_web), acc_norm, 0)
@@ -147,7 +145,7 @@ def get_png(acc_web):
         from io import StringIO, BytesIO
         py3 = True
     
-    acc_im = PIL.Image.fromarray(np.uint8(plt.cm.Blues(acc_norm)*255))
+    acc_im = PIL.Image.fromarray(np.uint8(colormap(acc_norm)*255))
                                       #YlOrRd(acc_norm)*255))
                                       #jet
     acc_mask = np.where(np.isfinite(acc_web), 255, 0)
@@ -176,10 +174,10 @@ def get_png_temp(ds,fdate='2018-07-04T12:00:00'):
 
         lon_2d, lat_2d = np.meshgrid(lons[ind_lons], lats[ind_lats])
     
-        surface_temp = ds.sel(time=fdate)['tmp'][ind_lats[0],ind_lons[0]]
+        surface_temp = ds.sel(time=dt)['tmp'][ind_lats[0],ind_lons[0]]
         surface_temp.metpy.convert_units('degC')
         acc_web=surface_temp
-        return get_png(acc_web)
+        return get_png(acc_web,colormap=plt.cm.YlOrRd)
     else:
         print('Нет данных на данную дату')
         return ''
