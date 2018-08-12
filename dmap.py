@@ -4,6 +4,8 @@ import geopandas
 from ipyleaflet import (
     Map,
     Marker,
+    Velocity,
+    basemaps,
     TileLayer,Polygon,Polyline
 )
 import ipyleaflet as il
@@ -129,7 +131,39 @@ def map_wind(ds,m,fdate='2018-07-24T06:00:00'):
     else:
         print('Нет данных на данную дату')
 
-def get_png(ds,fdate='2018-07-04T12:00:00'):
+
+def get_png(acc_web):       
+    acc_norm = acc_web - np.nanmin(acc_web)
+    acc_norm = acc_norm / np.nanmax(acc_norm)
+    acc_norm = np.where(np.isfinite(acc_web), acc_norm, 0)
+    import PIL
+    from base64 import b64encode
+    try:
+        from StringIO import StringIO
+        py3 = False
+    except ImportError:
+        from io import StringIO, BytesIO
+        py3 = True
+    
+    acc_im = PIL.Image.fromarray(np.uint8(plt.cm.Blues(acc_norm)*255))
+                                      #YlOrRd(acc_norm)*255))
+                                      #jet
+    acc_mask = np.where(np.isfinite(acc_web), 255, 0)
+    mask = PIL.Image.fromarray(np.uint8(acc_mask), mode='L')
+    im = PIL.Image.new('RGBA', acc_norm.shape[::-1], color=None)
+    im.paste(acc_im, mask=mask)
+    if py3:
+        f = BytesIO()
+    else:
+        f = StringIO()
+    im.save(f, 'png')
+    data = b64encode(f.getvalue())
+    if py3:
+        data = data.decode('ascii')
+    imgurl = 'data:image/png;base64,' + data
+    return imgurl 
+        
+def get_png_temp(ds,fdate='2018-07-04T12:00:00'):
     if ((ds['time'][-1].values > np.datetime64(fdate))&
         (ds['time'][0].values < np.datetime64(fdate))):
         lons=ds.sel(time=fdate)['lon']
@@ -143,45 +177,30 @@ def get_png(ds,fdate='2018-07-04T12:00:00'):
         surface_temp = ds.sel(time=dt)['tmp'][ind_lats[0],ind_lons[0]]
         surface_temp.metpy.convert_units('degC')
         acc_web=surface_temp
-        acc_norm = acc_web - np.nanmin(acc_web)
-        acc_norm = acc_norm / np.nanmax(acc_norm)
-        acc_norm = np.where(np.isfinite(acc_web), acc_norm, 0)
-    
-        import PIL
-        from base64 import b64encode
-        try:
-            from StringIO import StringIO
-            py3 = False
-        except ImportError:
-            from io import StringIO, BytesIO
-            py3 = True
-    
-        acc_im = PIL.Image.fromarray(np.uint8(plt.cm.Blues(acc_norm)*255))
-                                      #YlOrRd(acc_norm)*255))
-                                      #jet
-        acc_mask = np.where(np.isfinite(acc_web), 255, 0)
-        mask = PIL.Image.fromarray(np.uint8(acc_mask), mode='L')
-        im = PIL.Image.new('RGBA', acc_norm.shape[::-1], color=None)
-        im.paste(acc_im, mask=mask)
-        if py3:
-            f = BytesIO()
-        else:
-            f = StringIO()
-        im.save(f, 'png')
-        data = b64encode(f.getvalue())
-        if py3:
-            data = data.decode('ascii')
-        imgurl = 'data:image/png;base64,' + data
-        return imgurl 
+        return get_png(acc_web)
     else:
         print('Нет данных на данную дату')
         return ''
         
+    
+        
 def map_temp(ds,m,fdate='2018-07-24T06:00:00'):
     bounds = [(88., 18), (65., 100.)]
-    imgurl=get_png(ds,fdate)
+    imgurl=get_png_temp(ds,fdate)
     if imgurl != '':
     #bounds = [(18., 68), (100., 85.)]
         io = ImageOverlay(url=imgurl, bounds=bounds, opacity=0.3)
         m.add_layer(io)
-    
+
+def get_png_bath(ds):
+    bath = ds['z']
+    acc_web=np.flip(bath,axis=0)
+    return get_png(acc_web)
+        
+def map_bath(ds,m):
+    bounds = [(81.5, 18.5), (64.5, 99.)]
+    imgurl=get_png_bath(ds)
+    if imgurl != '':
+    #bounds = [(18., 68), (100., 85.)]
+        io = ImageOverlay(url=imgurl, bounds=bounds, opacity=0.75)
+        m.add_layer(io)

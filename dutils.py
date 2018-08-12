@@ -8,6 +8,7 @@ import datetime
 now = datetime.datetime.now()
 print(now.year, now.month, now.day, now.hour, now.minute, now.second)
 import xarray as xr
+from metpy.cbook import get_test_data
 import ftplib
 
 def is_downloadable(url):
@@ -147,7 +148,7 @@ def down_w(fname,INPUT=''):
 def get_data_w(fname,INPUT=''):
     
     down_w(fname)
-    ds3 = xr.open_dataset(INPUT+fname)
+    ds3 = xr.open_dataset(get_test_data(INPUT+fname, False))
     
     return ds3
 
@@ -166,5 +167,8 @@ def get_temp_data():
     ds3=get_data_w(fname)
     return ds3
 
-
+def get_bath_data()
+    fname="new_bath.nc"
+    ds = get_data_w(fname)
+    return ds
     
