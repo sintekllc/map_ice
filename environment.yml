@@ -16,6 +16,7 @@ dependencies:
   - metpy
   - xarray
   - geopandas
+  - PIL
   
   
   
