@@ -110,7 +110,7 @@ def download_last(now=datetime.datetime.now()):
 def download_year(year=2018,path_to=''):
     firstdate = datetime.date(2018, 1, 2)
     nextdate = datetime.date(2018, 1, 9)
-    # Кол-во времени между датами.
+    
     delta = nextdate - firstdate
     
     sdate=datetime.date(year, 1, 1)
