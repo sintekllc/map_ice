@@ -148,7 +148,8 @@ def down_w(fname,INPUT=''):
 def get_data_w(fname,INPUT=''):
     
     down_w(fname)
-    ds3 = xr.open_dataset(get_test_data(INPUT+fname, False))
+    ds3 = xr.open_dataset(INPUT+fname)
+        #get_test_data(INPUT+fname, False))
     
     return ds3
 

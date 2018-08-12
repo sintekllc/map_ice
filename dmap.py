@@ -174,7 +174,7 @@ def get_png_temp(ds,fdate='2018-07-04T12:00:00'):
 
         lon_2d, lat_2d = np.meshgrid(lons[ind_lons], lats[ind_lats])
     
-        surface_temp = ds.sel(time=dt)['tmp'][ind_lats[0],ind_lons[0]]
+        surface_temp = ds.sel(time=fdate)['tmp'][ind_lats[0],ind_lons[0]]
         surface_temp.metpy.convert_units('degC')
         acc_web=surface_temp
         return get_png(acc_web)
