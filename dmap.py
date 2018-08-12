@@ -197,7 +197,7 @@ def map_temp(ds,m,fdate='2018-07-24T06:00:00'):
 def get_png_bath(ds):
     bath = ds['z']
     acc_web=np.flip(bath,axis=0)
-    return get_png(acc_web)
+    return get_png(acc_web,colormap=plt.cm.ocean)
         
 def map_bath(ds,m):
     bounds = [(81.5, 18.5), (64.5, 99.)]
