@@ -167,7 +167,7 @@ def get_temp_data():
     ds3=get_data_w(fname)
     return ds3
 
-def get_bath_data()
+def get_bath_data():
     fname="new_bath.nc"
     ds = get_data_w(fname)
     return ds
