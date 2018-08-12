@@ -83,7 +83,7 @@ def get_letter(ffdate,sea='B',path_to=''):
 def download_last(now=datetime.datetime.now()):
     firstdate = datetime.date(2018, 1, 2)
     nextdate = datetime.date(2018, 1, 9)
-    # Кол-во времени между датами.
+    
     delta = nextdate - firstdate
     print(delta.days)
     while nextdate.month <= now.month:
