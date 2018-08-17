@@ -1,12 +1,20 @@
+#
+# File Utilites for Map Ice
+# https://github.com/sintekllc/map_ice
+# Author Shtekhin S.
+# 2018
+#
 import requests
 import zipfile
 import re
 import os
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import itertools
 import geopandas
 import datetime
 now = datetime.datetime.now()
-print(now.year, now.month, now.day, now.hour, now.minute, now.second)
+#print(now.year, now.month, now.day, now.hour, now.minute, now.second)
 import xarray as xr
 from metpy.cbook import get_test_data
 import ftplib
@@ -133,6 +141,13 @@ def download_year(year=2018,path_to=''):
         fn=get_letter(nextdate,'K',path_to=os.path.join(main_dir[0],common_dir[1]))
         nextdate = nextdate + delta
     return
+
+def get_colors(INPUT=''):
+    col1=pd.read_csv(INPUT+"colors1.csv",encoding='cp1251')
+    col2=pd.read_csv(INPUT+"colors2.csv",encoding='cp1251')
+    col1['all_name']=col1['Name']+' '+col1['Thickness']
+    col2['all_name']=col2['Name']+' '+col2['Concentration']
+    return col1,col2
 
 def down_w(fname,INPUT=''):
     if not os.path.exists(INPUT+fname):

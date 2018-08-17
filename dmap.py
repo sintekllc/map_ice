@@ -1,3 +1,9 @@
+#
+# Geo visualize Utilites for Map Ice
+# https://github.com/sintekllc/map_ice
+# Author Shtekhin S.
+# 2018
+#
 import numpy as np # linear algebra
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import matplotlib.pyplot as plt
@@ -12,6 +18,7 @@ from ipyleaflet import (
 )
 import ipyleaflet as il
 import matplotlib as mpl
+import datetime
 
 def map_ice_thick(df,m,cols):
     lat = 73.
@@ -206,3 +213,56 @@ def map_bath(ds,m):
     #bounds = [(18., 68), (100., 85.)]
         io = ImageOverlay(url=imgurl, bounds=bounds, opacity=0.75)
         m.add_layer(io)
+
+def get_p(lon,lat,l=2.5):
+    lon1=lon-l/2.
+    lat1=lat-l/2.
+    p=[(lon1,lat1),(lon1+l,lat1),(lon1+l,lat1+l),(lon1,lat1+l)]
+    return p
+
+def map_ice_conc_f(df,m,cols,name_col='CT',fdate='2018-07-04T12:00:00',map_dt=datetime.date(2016,1,10)):
+                   #datetime.datetime.now()):
+    lat = 73.
+    lon = 45.748445
+    center = [lat, lon]
+    zoom = 2
+    #m = Map(default_tiles=TileLayer(opacity=1.0), center=center, zoom=zoom)
+    pyear=map_dt.year
+    pweek=pd.to_datetime(map_dt.strftime('%Y%m%d')).week
+    if pyear==2016:
+        pyear=pd.to_datetime(fdate).year
+        pweek=pd.to_datetime(fdate).week
+        
+    
+    for lon in df.lon.unique():
+        for lat in df.lat.unique():
+            #print(lon,lat)
+            crd1=get_p(lat,lon,1.)
+        
+       
+            cid=df.loc[
+                (df.year==pyear)&
+                (df.week==pweek)&
+                #(df.dat==map_dt)&
+                   (df.lat==lat)&
+                   (df.lon==lon),name_col]
+            #print(cid.shape)
+            if cid.shape[0]!=0:
+                cid=cid.values[0]
+            else:
+                continue
+            #print(cid)
+            name_color='CT'
+            if (cid==-9)|(cid=='-9'):  
+                fcolor = mpl.colors.rgb2hex(cols.loc[cols[name_color]==0,['color1','color2','color3']].values[0]/255.)
+            else:
+                fcolor = mpl.colors.rgb2hex(cols.loc[cols[name_color]==np.int(cid),['color1','color2','color3']].values[0]/255.)
+        
+            pg = il.Polygon(locations=crd1, weight=1,
+                color=fcolor
+                 #'white' , opacity=0.8
+                      , opacity=0.5 , fill_opacity=0.5,
+                fill_color=fcolor
+            
+                       )
+            m += pg
